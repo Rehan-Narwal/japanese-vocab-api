@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-sqlalchemey
+sqlalchemy
 pycopg2-binary
 passlib[bcrypt]
 python-jose
