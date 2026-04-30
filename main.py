@@ -8,14 +8,11 @@ from schemas import UserCreate,UserLogin
 import models
 
 models.Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
 
 @app.get("/")
 def home():
-    return {
-        "Welcome"
-    }
+    return {"message":"Welcome please use /docs in url"}
 
 def get_db():
     db = SessionLocal()
