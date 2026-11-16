@@ -1,101 +1,73 @@
 # Japanese Vocabulary Learning API
 
-A backend-focused API built with FastAPI for managing Japanese vocabulary learning.
-The system is designed to handle user authentication, external API integration, and per-user learning progress.
+This is a FastAPI project I built to save Japanese words and keep track of which ones I'm still learning and which ones I already know.
 
----
+It uses the Jisho API to look up words, and stores each user's vocabulary in a PostgreSQL database.
 
-## Motivation
+## What it does
 
-I wanted to build a backend system that goes beyond basic CRUD operations and reflects a more realistic use case.
+- Register and log in with an email and password
+- Search for Japanese words using Jisho
+- Save words to a personal learning list
+- Mark saved words as known
+- View or delete saved words
 
-This project is based on a vocabulary learning workflow, where users can save words and track their progress by categorizing them as "learning" or "known".
+## Built with
 
-The focus was on designing the backend architecture — handling authentication, user-specific data, and state transitions — rather than building a frontend interface.
+- Python and FastAPI
+- PostgreSQL and SQLAlchemy
+- JWT for authentication
+- Jisho API for word searches
 
+## API
 
-## Features
-
-* JWT-based user authentication
-* Search Japanese words using Jisho API
-* Save words to a personal learning list
-* Track progress (learning → known)
-* User-specific data isolation
-
----
-
-## Tech Stack
-
-* FastAPI
-* PostgreSQL
-* SQLAlchemy ORM
-* JWT Authentication
-* External API: Jisho
-
----
-
-## System Design Overview
-
-* Users authenticate via JWT tokens
-* Protected routes use dependency injection (`get_current_user`)
-* Words are stored per user with ownership enforced at query level
-* External data is fetched from Jisho API and normalized before storage
-* Learning state is tracked using a status field (`learning`, `known`)
-
----
-
-## API Usage
-
-### Live API
+The deployed API and interactive documentation are available here:
 
 https://japanese-vocab-api.onrender.com/docs
 
-### Authentication Flow
+Main endpoints:
 
-1. Register a user
-2. Login to receive access token
-3. Click **Authorize** in `/docs`
-4. Enter:
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/register` | Create an account |
+| POST | `/login` | Log in and get an access token |
+| GET | `/search?word=...` | Search Jisho |
+| POST | `/add?word=...` | Save a word |
+| GET | `/learning` | Get words in the learning list |
+| PUT | `/mark-known?id=...` | Mark a word as known |
+| GET | `/known` | Get known words |
+| DELETE | `/delete?id=...` | Delete a saved word |
 
-   ```
-   <your_token>
-   ```
-5. Access protected endpoints
+The `/add`, `/learning`, `/mark-known`, `/known`, and `/delete` endpoints require a bearer token. The search endpoint is public.
 
----
+## Run locally
 
-## Example Endpoints
+1. Clone the repository.
+2. Create and activate a virtual environment.
+3. Install the dependencies:
 
-* `POST /register` — create user
-* `POST /login` — get JWT token
-* `GET /search?word=...` — search vocabulary
-* `POST /add` — add word to learning list
-* `GET /learning` — retrieve learning words
-* `PUT /mark-known` — update word status
-* `GET /known` — retrieve known words
-* `DELETE /delete` — remove word
+```bash
+pip install -r requirements.txt
+```
 
----
+4. Create a `.env` file in the project folder with your PostgreSQL connection string and a secret key:
 
-## Design Decisions
+```env
+DATABASE_URL=your_postgresql_connection_string
+SECRET_KEY=your_secret_key
+```
 
-* Used JWT for stateless authentication
-* Chose FastAPI for automatic docs and dependency injection
-* Separated learning and known states for extensibility
-* Integrated external API instead of static dataset for real-world data handling
+5. Start the server:
 
----
+```bash
+uvicorn main:app --reload
+```
 
-## Future Improvements
+Open `http://127.0.0.1:8000/docs` to test the endpoints.
 
-* Add frontend for daily usability
-* Implement spaced repetition system (SRS)
-* Add caching for external API calls
-* Improve error handling and retries
+## Things I might add later
 
----
-
-## Notes
-
-* This project focuses on backend system design and API architecture
-* All functionality can be tested via FastAPI's interactive `/docs` interface
+- A simple frontend
+- Spaced repetition for reviewing words
+- Caching for Jisho searches
+- Better handling of external API errors
